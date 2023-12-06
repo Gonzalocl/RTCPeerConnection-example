@@ -1,13 +1,16 @@
 let pc;
 let offer;
 let candidates = [];
+let dataChannel;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 
 async function peer() {
     pc = new RTCPeerConnection();
     pc.onicecandidate = onIceCandidate;
-    let channel = pc.createDataChannel('dataChannel');
-    channel.onopen = onDataChannelOpen;
+
+    dataChannel = pc.createDataChannel('dataChannel');
+    dataChannel.onopen = onDataChannelOpen;
+    dataChannel.onmessage = onDataChannelMessage;
 
     offer = await pc.createOffer();
 
@@ -41,10 +44,17 @@ broadcastChannel.onmessage = async e => {
     message.candidates.forEach(c => pc.addIceCandidate(c));
 }
 
-function onDataChannelOpen(e) {
-    console.log("onDataChannelOpen: " + e);
+function onDataChannelOpen() {
+    console.log("onDataChannelOpen");
+}
+
+function onDataChannelMessage(e) {
+    console.log("onDataChannelMessage: " + e.data);
+}
+
+function sendMessage(message) {
+    dataChannel.send(message);
 }
 
 peer()
-
 

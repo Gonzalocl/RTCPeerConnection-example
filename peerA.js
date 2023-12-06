@@ -1,6 +1,7 @@
 let pc;
 let answer;
 let candidates = [];
+let dataChannel;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 
 broadcastChannel.onmessage = e => {
@@ -14,6 +15,7 @@ broadcastChannel.onmessage = e => {
 async function peer(offer, remoteCandidates) {
     pc = new RTCPeerConnection();
     pc.onicecandidate = onIceCandidate;
+
     pc.ondatachannel = onDataChannel;
 
     await pc.setRemoteDescription(offer);
@@ -44,6 +46,21 @@ function onIceCandidate(e) {
 
 function onDataChannel(e) {
     console.log("onDataChannel: " + e);
+
+    dataChannel = e.channel;
+    dataChannel.onopen = onDataChannelOpen;
+    dataChannel.onmessage = onDataChannelMessage;
 }
 
+function onDataChannelOpen() {
+    console.log("onDataChannelOpen");
+}
+
+function onDataChannelMessage(e) {
+    console.log("onDataChannelMessage: " + e.data);
+}
+
+function sendMessage(message) {
+    dataChannel.send(message);
+}
 
