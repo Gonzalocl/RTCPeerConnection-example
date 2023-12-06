@@ -1,33 +1,49 @@
 let pc;
+let answer;
+let candidates = [];
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 
 broadcastChannel.onmessage = e => {
     console.log('MESSAGE: ' + e.data);
-    peer(JSON.parse(e.data));
+
+    let message = JSON.parse(e.data);
+
+    peer(message.offer, message.candidates);
 }
 
-async function peer(offer) {
+async function peer(offer, remoteCandidates) {
     pc = new RTCPeerConnection();
     pc.onicecandidate = onIceCandidate;
     pc.ondatachannel = onDataChannel;
 
-    pc.setRemoteDescription(offer);
+    await pc.setRemoteDescription(offer);
 
-    let answer = await pc.createAnswer();
+    answer = await pc.createAnswer();
 
-    pc.setLocalDescription(answer);
+    await pc.setLocalDescription(answer);
 
-    broadcastChannel.postMessage(JSON.stringify(answer));
+    remoteCandidates.forEach(c => pc.addIceCandidate(c));
 
     console.log('ANSWER: ' + JSON.stringify(answer));
 }
 
 function onIceCandidate(e) {
     const candidate = e.candidate;
+
     console.log('ICE: ' + candidate);
+
+    if (candidate) {
+        candidates.push(candidate);
+        return;
+    }
+
+    let message = JSON.stringify({'answer': answer, 'candidates': candidates});
+
+    broadcastChannel.postMessage(message);
 }
 
 function onDataChannel(e) {
     console.log("onDataChannel: " + e);
 }
+
 
