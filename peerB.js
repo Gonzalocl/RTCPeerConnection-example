@@ -1,18 +1,5 @@
-function onIceCandidate(e) {
-    const candidate = e.candidate;
-    console.log('ICE: ' + candidate);
-}
-
-function onDataChannelOpen(e) {
-    console.log("onDataChannelOpen: " + e);
-}
-
 let pc;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
-broadcastChannel.onmessage = e => {
-    console.log('MESSAGE: ' + e.data);
-    pc.setRemoteDescription(JSON.parse(e.data));
-}
 
 async function peer() {
     pc = new RTCPeerConnection();
@@ -27,6 +14,20 @@ async function peer() {
     broadcastChannel.postMessage(JSON.stringify(offer));
 
     console.log('OFFER: ' + JSON.stringify(offer));
+}
+
+function onIceCandidate(e) {
+    const candidate = e.candidate;
+    console.log('ICE: ' + candidate);
+}
+
+broadcastChannel.onmessage = e => {
+    console.log('MESSAGE: ' + e.data);
+    pc.setRemoteDescription(JSON.parse(e.data));
+}
+
+function onDataChannelOpen(e) {
+    console.log("onDataChannelOpen: " + e);
 }
 
 peer()
