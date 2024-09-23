@@ -25,14 +25,14 @@ async function peer() {
 function onIceCandidate(e) {
     const candidate = e.candidate;
 
-    console.log('ICE: ' + candidate);
+    console.log('ICE: ' + JSON.stringify(candidate));
 
     if (candidate) {
         candidates.push(candidate);
         return;
     }
 
-    let message = JSON.stringify({'offer': offer, 'candidates': candidates});
+    let message = JSON.stringify({offer, candidates});
 
     broadcastChannel.postMessage(message);
 }

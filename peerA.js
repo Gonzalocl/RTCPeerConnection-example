@@ -37,20 +37,20 @@ async function peer(offer, remoteCandidates) {
 function onIceCandidate(e) {
     const candidate = e.candidate;
 
-    console.log('ICE: ' + candidate);
+    console.log('ICE: ' + JSON.stringify(candidate));
 
     if (candidate) {
         candidates.push(candidate);
         return;
     }
 
-    let message = JSON.stringify({'answer': answer, 'candidates': candidates});
+    let message = JSON.stringify({answer, candidates});
 
     broadcastChannel.postMessage(message);
 }
 
 function onDataChannel(e) {
-    console.log("onDataChannel: " + e);
+    console.log("onDataChannel: " + JSON.stringify(e));
 
     dataChannel = e.channel;
     dataChannel.onopen = onDataChannelOpen;
