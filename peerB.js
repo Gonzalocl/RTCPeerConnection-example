@@ -4,6 +4,7 @@ let candidates = [];
 let dataChannel;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 
+// 1
 async function peer() {
     pc = new RTCPeerConnection();
     pc.onicecandidate = onIceCandidate;
@@ -14,11 +15,13 @@ async function peer() {
 
     offer = await pc.createOffer();
 
+    // This line calls onIceCandidate twice
     await pc.setLocalDescription(offer);
 
     console.log('OFFER: ' + JSON.stringify(offer));
 }
 
+// 2
 function onIceCandidate(e) {
     const candidate = e.candidate;
 
@@ -34,6 +37,7 @@ function onIceCandidate(e) {
     broadcastChannel.postMessage(message);
 }
 
+// 6
 broadcastChannel.onmessage = async e => {
     console.log('MESSAGE: ' + e.data);
 
@@ -41,6 +45,7 @@ broadcastChannel.onmessage = async e => {
 
     await pc.setRemoteDescription(message.answer);
 
+    // Only necessary on one side
     message.candidates.forEach(c => pc.addIceCandidate(c));
 }
 
@@ -57,4 +62,3 @@ function sendMessage(message) {
 }
 
 peer()
-
