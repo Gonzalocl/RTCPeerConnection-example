@@ -41,7 +41,7 @@ pc.onicecandidate = onIceCandidate;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 broadcastChannel.onmessage = onMessage;
 
-// step 1 on peer B
+// step 1 on peer A
 (async function () {
     dataChannel = pc.createDataChannel('dataChannel');
     dataChannel.onopen = onDataChannelOpen;
@@ -55,7 +55,7 @@ broadcastChannel.onmessage = onMessage;
     iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({offer, candidates})));
 }());
 
-// step 2 on peer A
+// step 2 on peer B
 (async function () {
     function onDataChannel(e) {
         console.log("onDataChannel: " + JSON.stringify(e));
@@ -80,7 +80,7 @@ broadcastChannel.onmessage = onMessage;
     iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({answer, candidates})));
 }());
 
-// step 3 on peer B
+// step 3 on peer A
 (async function () {
     answer = message.answer;
     remoteCandidates = message.candidates;
@@ -90,4 +90,4 @@ broadcastChannel.onmessage = onMessage;
 
 // step 4 on peer A or B
 remoteCandidates.forEach(c => pc.addIceCandidate(c));
-sendMessage('Hello!')
+sendMessage('Hello!');
