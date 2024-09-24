@@ -1,5 +1,4 @@
-// A and B
-
+// step 0 on peers A and B
 function onIceCandidate(e) {
     const candidate = e.candidate;
     if (candidate) {
@@ -42,47 +41,53 @@ pc.onicecandidate = onIceCandidate;
 let broadcastChannel = new BroadcastChannel('broadcastChannel');
 broadcastChannel.onmessage = onMessage;
 
-// B
-dataChannel = pc.createDataChannel('dataChannel');
-dataChannel.onopen = onDataChannelOpen;
-dataChannel.onmessage = onDataChannelMessage;
-
-offer = await pc.createOffer();
-
-// This line calls onIceCandidate twice
-await pc.setLocalDescription(offer);
-
-iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({offer, candidates})));
-
-// A
-function onDataChannel(e) {
-    console.log("onDataChannel: " + JSON.stringify(e));
-
-    dataChannel = e.channel;
+// step 1 on peer B
+(async function () {
+    dataChannel = pc.createDataChannel('dataChannel');
     dataChannel.onopen = onDataChannelOpen;
     dataChannel.onmessage = onDataChannelMessage;
-}
 
-pc.ondatachannel = onDataChannel;
+    offer = await pc.createOffer();
 
-offer = message.offer;
-remoteCandidates = message.candidates;
+    // This line calls onIceCandidate twice
+    await pc.setLocalDescription(offer);
 
-await pc.setRemoteDescription(offer);
+    iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({offer, candidates})));
+}());
 
-answer = await pc.createAnswer();
+// step 2 on peer A
+(async function () {
+    function onDataChannel(e) {
+        console.log("onDataChannel: " + JSON.stringify(e));
 
-// This line calls onIceCandidate twice
-await pc.setLocalDescription(answer);
+        dataChannel = e.channel;
+        dataChannel.onopen = onDataChannelOpen;
+        dataChannel.onmessage = onDataChannelMessage;
+    }
 
-iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({answer, candidates})));
+    pc.ondatachannel = onDataChannel;
 
-// B
-answer = message.answer;
-remoteCandidates = message.candidates;
+    offer = message.offer;
+    remoteCandidates = message.candidates;
 
-await pc.setRemoteDescription(answer);
+    await pc.setRemoteDescription(offer);
 
-// A or B
+    answer = await pc.createAnswer();
+
+    // This line calls onIceCandidate twice
+    await pc.setLocalDescription(answer);
+
+    iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({answer, candidates})));
+}());
+
+// step 3 on peer B
+(async function () {
+    answer = message.answer;
+    remoteCandidates = message.candidates;
+
+    await pc.setRemoteDescription(answer);
+}());
+
+// step 4 on peer A or B
 remoteCandidates.forEach(c => pc.addIceCandidate(c));
 sendMessage('Hello!')
