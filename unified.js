@@ -5,7 +5,10 @@ function onIceCandidate(e) {
     if (candidate) {
         console.log('onIceCandidate: ' + JSON.stringify(candidate));
         candidates.push(candidate);
+        return;
     }
+
+    iceDoneResolver();
 }
 
 function onMessage(e) {
@@ -31,6 +34,7 @@ let dataChannel;
 let offer;
 let answer;
 let message;
+let {'promise': iceDonePromise, 'resolve': iceDoneResolver} = Promise.withResolvers();
 
 let pc = new RTCPeerConnection();
 pc.onicecandidate = onIceCandidate;
@@ -48,7 +52,7 @@ offer = await pc.createOffer();
 // This line calls onIceCandidate twice
 await pc.setLocalDescription(offer);
 
-broadcastChannel.postMessage(JSON.stringify({offer, candidates}));
+iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({offer, candidates})));
 
 // A
 function onDataChannel(e) {
@@ -71,7 +75,7 @@ answer = await pc.createAnswer();
 // This line calls onIceCandidate twice
 await pc.setLocalDescription(answer);
 
-broadcastChannel.postMessage(JSON.stringify({answer, candidates}));
+iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({answer, candidates})));
 
 // B
 answer = message.answer;
