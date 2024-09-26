@@ -87,6 +87,14 @@ function sendMessageClick() {
     messageInput.value = "";
 }
 
+function messageReceived(message) {
+    let messageDiv = document.createElement("div");
+    messageDiv.className = "message other";
+    messageDiv.innerText = message;
+
+    chatHistory.prepend(messageDiv);
+}
+
 function messageKeyDown(e) {
     if (e.key === "Enter") {
         sendMessageClick();
