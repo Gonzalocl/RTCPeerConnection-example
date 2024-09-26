@@ -26,6 +26,10 @@ function showJoinSection() {
 }
 
 function showWaitingSection() {
+    waiting = true;
+    waitingSeconds = waitingInterval;
+    waitingUpdate();
+
     joinSection.hidden = true;
     waitingSection.hidden = false;
     connectingSection.hidden = true;
@@ -33,6 +37,9 @@ function showWaitingSection() {
 }
 
 function showConnectingSection() {
+    connecting = true;
+    connectingUpdate();
+
     joinSection.hidden = true;
     waitingSection.hidden = true;
     connectingSection.hidden = false;
@@ -51,15 +58,10 @@ function createChatClick() {
     joinLinkText.value = joinLink;
 
     showWaitingSection();
-    waiting = true;
-    waitingSeconds = waitingInterval;
-    waitingUpdate();
 }
 
 function joinChatClick() {
     showConnectingSection();
-    connecting = true;
-    connectingUpdate();
 }
 
 function refreshClick() {
