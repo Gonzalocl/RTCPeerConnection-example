@@ -1,0 +1,32 @@
+#chat-section {
+    width: 500px;
+}
+
+#chat-history {
+    height: 200px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.message {
+    padding: 2px;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+.me {
+    background: aqua;
+}
+
+.other {
+    background: aquamarine;
+}
+
+#message-input {
+    width: 80%;
+}
+
+#message-button {
+    width: 19%;
+}

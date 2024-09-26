@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <title>WebRTC Simple Chat Example</title>
+    <link href="chat.css" rel="stylesheet">
+</head>
+<body>
+
+<section>
+    <header>WebRTC Simple Chat Example</header>
+    <p></p>
+</section>
+
+<section hidden id="join-section">
+    <p>Create new chat.</p>
+    <button onclick="createChatClick()">Create Chat</button>
+
+    <p>Or join an existing one, paste chat id or link.</p>
+    <input id="join-input">
+    <button onclick="joinChatClick()">Join Chat</button>
+</section>
+
+<section hidden id="waiting-section">
+    <p>Waiting other to connect.</p>
+    <p id="waiting-text"></p>
+    <button onclick="refreshClick()">Refresh Now</button>
+</section>
+
+<section hidden id="connecting-section">
+    <p id="connecting-text">Connecting.</p>
+</section>
+
+<section hidden id="chat-section">
+    <div id="chat-history">
+    </div>
+    <div>
+        <input id="message-input" onkeydown="messageKeyDown(event)" placeholder="Write a message">
+        <button id="message-button" onclick="sendMessageClick()">Send</button>
+    </div>
+</section>
+
+<script src="chat.js"></script>
+</body>
+</html>
