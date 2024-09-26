@@ -1,6 +1,7 @@
 let chatId;
 let joinSection;
 let waitingSection;
+let refreshButton;
 let connectingSection;
 let chatSection;
 let chatHistory;
@@ -56,6 +57,8 @@ function joinChatClick() {
 }
 
 function refreshClick() {
+    waiting = false;
+    refresh();
 }
 
 function sendMessageClick() {
@@ -83,7 +86,13 @@ function waitingUpdate() {
         return;
     }
 
-    // TODO
+    waitingText.innerText = "Refreshing in " + --waitingSeconds + " seconds.";
+
+    if (waitingSeconds === 0) {
+        refresh();
+        return;
+    }
+
     setTimeout(waitingUpdate, 1000);
 }
 
@@ -96,10 +105,28 @@ function connectingUpdate() {
     setTimeout(connectingUpdate, 1000);
 }
 
+function refresh() {
+    refreshButton.disabled = true;
+
+    setTimeout(refreshFailed, 3000);
+}
+
+function refreshSucceed() {
+    showChatSection();
+}
+
+function refreshFailed() {
+    refreshButton.disabled = false;
+    waiting = true;
+    waitingSeconds = waitingInterval;
+    waitingUpdate();
+}
+
 function main() {
     chatId = new URLSearchParams(window.location.search).get("chatId");
     joinSection = document.getElementById("join-section");
     waitingSection = document.getElementById("waiting-section");
+    refreshButton = document.getElementById("refresh-button");
     connectingSection = document.getElementById("connecting-section");
     chatSection = document.getElementById("chat-section");
     chatHistory = document.getElementById("chat-history");
