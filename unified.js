@@ -48,10 +48,7 @@ broadcastChannel.onmessage = onMessage;
     dataChannel.onmessage = onDataChannelMessage;
 
     offer = await pc.createOffer();
-
-    // This line calls onIceCandidate twice
     await pc.setLocalDescription(offer);
-
     iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({offer, candidates})));
 }());
 
@@ -71,12 +68,10 @@ broadcastChannel.onmessage = onMessage;
     remoteCandidates = message.candidates;
 
     await pc.setRemoteDescription(offer);
+    remoteCandidates.forEach(c => pc.addIceCandidate(c));
 
     answer = await pc.createAnswer();
-
-    // This line calls onIceCandidate twice
     await pc.setLocalDescription(answer);
-
     iceDonePromise.then(() => broadcastChannel.postMessage(JSON.stringify({answer, candidates})));
 }());
 
@@ -86,8 +81,8 @@ broadcastChannel.onmessage = onMessage;
     remoteCandidates = message.candidates;
 
     await pc.setRemoteDescription(answer);
+    remoteCandidates.forEach(c => pc.addIceCandidate(c));
 }());
 
 // step 4 on peer A or B
-remoteCandidates.forEach(c => pc.addIceCandidate(c));
 sendMessage('Hello!');
