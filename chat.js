@@ -1,6 +1,9 @@
 let chatId;
+let joinLink;
+
 let joinSection;
 let waitingSection;
+let joinLinkText;
 let refreshButton;
 let connectingSection;
 let chatSection;
@@ -44,6 +47,9 @@ function showChatSection() {
 }
 
 function createChatClick() {
+    joinLink = window.location.href + "?chatId=" + chatId;
+    joinLinkText.value = joinLink;
+
     showWaitingSection();
     waiting = true;
     waitingSeconds = waitingInterval;
@@ -59,6 +65,10 @@ function joinChatClick() {
 function refreshClick() {
     waiting = false;
     refresh();
+}
+
+function copyClick() {
+    navigator.clipboard.writeText(joinLink);
 }
 
 function sendMessageClick() {
@@ -126,6 +136,7 @@ function main() {
     chatId = new URLSearchParams(window.location.search).get("chatId");
     joinSection = document.getElementById("join-section");
     waitingSection = document.getElementById("waiting-section");
+    joinLinkText = document.getElementById("join-link");
     refreshButton = document.getElementById("refresh-button");
     connectingSection = document.getElementById("connecting-section");
     chatSection = document.getElementById("chat-section");
