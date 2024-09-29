@@ -8,7 +8,7 @@ import json
 #     yield chat_signaling.chat.application(environ, start_response)
 
 def chat_signaling_request(method, path_request, body_request):
-    path = path_request[path_request.find('/', 1):]
+    path = path_request[15:]
 
     body = body_request
     if body_request:
