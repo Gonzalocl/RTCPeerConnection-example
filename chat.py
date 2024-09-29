@@ -1,6 +1,13 @@
 import json
 
 
+# docker run --rm -p 3306:3306 \
+#   -e MYSQL_ROOT_PASSWORD=root \
+#   -e MYSQL_USER=user \
+#   -e MYSQL_PASSWORD=password \
+#   -e MYSQL_DATABASE=database \
+#   mysql
+
 # uwsgi --http :9090 --plugin python --wsgi-file chat.py
 
 # import chat_signaling.chat
