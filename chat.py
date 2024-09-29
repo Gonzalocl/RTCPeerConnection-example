@@ -8,13 +8,18 @@ import json
 #     yield chat_signaling.chat.application(environ, start_response)
 
 def chat_signaling_request(method, path_request, body_request):
-    path = path_request[15:]
+    if not path_request.startswith('/chat-signaling'):
+        status = '404 File not found'
+        headers = []
+        response = {}
+    else:
+        path = path_request[15:]
 
-    body = body_request
-    if body_request:
-        body = json.loads(body_request)
+        body = body_request
+        if body_request:
+            body = json.loads(body_request)
 
-    status, headers, response = chat_request(method, path, body)
+        status, headers, response = chat_request(method, path, body)
 
     response_encoded = json.dumps(response).encode('utf8')
 
