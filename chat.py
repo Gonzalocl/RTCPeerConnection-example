@@ -1,6 +1,7 @@
 import json
 import string
 import random
+import datetime
 import mysql.connector
 
 # docker run --rm -p 3306:3306 \
@@ -81,28 +82,35 @@ def chat_request(method, path, body):
 
 
 def post_offer(body):
-    print('post_offer')
-    print(body)
-    return '200 OK', [], {}
+    chat = {'date': datetime.datetime.now(datetime.timezone.utc),
+            'offer': body['offer'],
+            'answer': None}
+
+    stored_chat = db_store_chat(chat)
+
+    return '200 OK', [], {'chat_id': stored_chat['id']}
 
 
 def get_offer(chat_id):
-    print('get_offer')
-    print(chat_id)
-    return '200 OK', [], {}
+    chat = db_get_chat(chat_id)
+    return '200 OK', [], {'offer': chat[2]}
 
 
 def put_answer(chat_id, body):
-    print('put_answer')
-    print(chat_id)
-    print(body)
+    chat = {'id': chat_id,
+            'date': datetime.datetime.now(datetime.timezone.utc),
+            'offer': None,
+            'answer': body['answer']}
+
+    db_store_chat(chat)
+
     return '200 OK', [], {}
 
 
 def get_answer(chat_id):
-    print('get_answer')
-    print(chat_id)
-    return '200 OK', [], {}
+    chat = db_get_chat(chat_id)
+    db_delete_chat(chat_id)
+    return '200 OK', [], {'answer': chat[3]}
 
 
 def application(env, start_response):
