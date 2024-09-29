@@ -147,7 +147,7 @@ def db_store_chat(chat):
             return None
 
     sql = 'REPLACE INTO chats (id, date, offer, answer) VALUES (%s, %s, %s, %s)'
-    val = (chat['id'], '2024-01-01 00:00:00', chat['offer'], chat['answer'])
+    val = (chat['id'], chat['date'], chat['offer'], chat['answer'])
     db_cursor.execute(sql, val)
     db.commit()
     return chat
