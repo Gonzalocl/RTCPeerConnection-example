@@ -9,7 +9,7 @@ import json
 
 def chat_signaling_request(method, path_request, body_request):
     if not path_request.startswith('/chat-signaling'):
-        status = '404 File not found'
+        status = '404 Not Found'
         headers = []
         response = {}
     else:
@@ -32,6 +32,53 @@ def chat_signaling_request(method, path_request, body_request):
 
 
 def chat_request(method, path, body):
+    if method == 'OPTIONS':
+        return '200 OK', [], {}
+
+    if path == '/offer':
+        if method == 'POST':
+            return post_offer(body)
+        return '405 Method Not Allowed', [], {}
+
+    chat_id = path[1:path.find('/', 1)]
+
+    if path[len(chat_id) + 1:] == '/offer':
+        if method == 'GET':
+            return get_offer(chat_id)
+        return '405 Method Not Allowed', [], {}
+
+    if path[len(chat_id) + 1:] == '/answer':
+        if method == 'PUT':
+            return put_answer(chat_id, body)
+        if method == 'GET':
+            return get_answer(chat_id)
+        return '405 Method Not Allowed', [], {}
+
+    return '404 Not Found', [], {}
+
+
+def post_offer(body):
+    print('post_offer')
+    print(body)
+    return '200 OK', [], {}
+
+
+def get_offer(chat_id):
+    print('get_offer')
+    print(chat_id)
+    return '200 OK', [], {}
+
+
+def put_answer(chat_id, body):
+    print('put_answer')
+    print(chat_id)
+    print(body)
+    return '200 OK', [], {}
+
+
+def get_answer(chat_id):
+    print('get_answer')
+    print(chat_id)
     return '200 OK', [], {}
 
 
