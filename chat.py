@@ -149,7 +149,7 @@ def get_random_chat_id():
 
 
 def db_store_chat(chat):
-    if not 'id' in chat or not chat['id']:
+    if 'id' not in chat or not chat['id']:
         chat['id'] = get_new_chat_id()
         if not chat['id']:
             return None
