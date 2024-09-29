@@ -1,5 +1,6 @@
 import json
-
+import string
+import random
 
 # docker run --rm -p 3306:3306 \
 #   -e MYSQL_ROOT_PASSWORD=root \
@@ -13,6 +14,11 @@ import json
 # import chat_signaling.chat
 # if environ.get('PATH_INFO').startswith('/chat-signaling'):
 #     yield chat_signaling.chat.application(environ, start_response)
+
+
+new_chat_id_max_attempts = 10
+chat_id_length = 64
+
 
 def chat_signaling_request(method, path_request, body_request):
     if not path_request.startswith('/chat-signaling'):
@@ -111,3 +117,19 @@ def read_body(env):
         return None
 
     return env.get('wsgi.input').read(request_body_size)
+
+
+def get_new_chat_id():
+    for _ in range(new_chat_id_max_attempts):
+        chat_id = get_random_chat_id()
+        if not db_is_chat_id_present(chat_id):
+            return chat_id
+    return None
+
+
+def get_random_chat_id():
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=chat_id_length))
+
+
+def db_is_chat_id_present(chat_id):
+    return None
