@@ -26,6 +26,7 @@ db = mysql.connector.connect(
     password="password",
     database="database"
 )
+db_cursor = db.cursor()
 
 
 def chat_signaling_request(method, path_request, body_request):
@@ -139,5 +140,32 @@ def get_random_chat_id():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=chat_id_length))
 
 
+def db_store_chat(chat):
+    if not chat['id']:
+        chat['id'] = get_new_chat_id()
+        if not chat['id']:
+            return None
+
+    sql = 'REPLACE INTO chats (id, date, offer, answer) VALUES (%s, %s, %s, %s)'
+    val = (chat['id'], '2024-01-01 00:00:00', chat['offer'], chat['answer'])
+    db_cursor.execute(sql, val)
+    db.commit()
+    return chat
+
+
+def db_get_chat(chat_id):
+    sql = 'SELECT * FROM chats WHERE id = %s'
+    val = (chat_id,)
+    db_cursor.execute(sql, val)
+    return db_cursor.fetchone()
+
+
+def db_delete_chat(chat_id):
+    sql = 'DELETE FROM chats WHERE id = %s'
+    val = (chat_id,)
+    db_cursor.execute(sql, val)
+    db.commit()
+
+
 def db_is_chat_id_present(chat_id):
-    return None
+    return True if db_get_chat(chat_id) else False
