@@ -27,6 +27,7 @@ def chat_signaling_request(method, path_request, body_request):
     headers.append(('Content-Length', str(len(response_encoded))))
     headers.append(('Access-Control-Allow-Origin', '*'))
     headers.append(('Access-Control-Allow-Headers', '*'))
+    headers.append(('Access-Control-Allow-Methods', '*'))
 
     return status, headers, response_encoded
 
