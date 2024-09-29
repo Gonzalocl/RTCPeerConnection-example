@@ -1,6 +1,7 @@
 import json
 import string
 import random
+import mysql.connector
 
 # docker run --rm -p 3306:3306 \
 #   -e MYSQL_ROOT_PASSWORD=root \
@@ -18,6 +19,13 @@ import random
 
 new_chat_id_max_attempts = 10
 chat_id_length = 64
+
+db = mysql.connector.connect(
+    host="localhost",
+    user="user",
+    password="password",
+    database="database"
+)
 
 
 def chat_signaling_request(method, path_request, body_request):
