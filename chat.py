@@ -42,7 +42,12 @@ def chat_signaling_request(method, path_request, body_request):
         if body_request:
             body = json.loads(body_request)
 
-        status, headers, response = chat_request(method, path, body)
+        try:
+            status, headers, response = chat_request(method, path, body)
+        except:
+            status = '500 Internal Server Error'
+            headers = []
+            response = {}
 
     response_encoded = json.dumps(response).encode('utf8')
 
@@ -88,11 +93,18 @@ def post_offer(body):
 
     stored_chat = db_store_chat(chat)
 
+    if not stored_chat:
+        return '500 Internal Server Error', [], {}
+
     return '200 OK', [], {'chat_id': stored_chat['id']}
 
 
 def get_offer(chat_id):
     chat = db_get_chat(chat_id)
+
+    if not chat:
+        return '404 Not Found', [], {}
+
     return '200 OK', [], {'offer': chat[2]}
 
 
@@ -109,6 +121,10 @@ def put_answer(chat_id, body):
 
 def get_answer(chat_id):
     chat = db_get_chat(chat_id)
+
+    if not chat:
+        return '404 Not Found', [], {}
+
     db_delete_chat(chat_id)
     return '200 OK', [], {'answer': chat[3]}
 
