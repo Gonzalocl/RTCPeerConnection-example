@@ -53,9 +53,9 @@ def chat_signaling_request(method, path_request, body_request):
 
     headers.append(('Content-Type', 'application/json'))
     headers.append(('Content-Length', str(len(response_encoded))))
-    headers.append(('Access-Control-Allow-Origin', '*'))
-    headers.append(('Access-Control-Allow-Headers', '*'))
-    headers.append(('Access-Control-Allow-Methods', '*'))
+    headers.append(('Access-Control-Allow-Origin', 'https://webrtc-chat-example.gonzalocaparros.eu.org'))
+    headers.append(('Access-Control-Allow-Headers', 'Content-Type'))
+    headers.append(('Access-Control-Allow-Methods', 'PUT'))
 
     return status, headers, response_encoded
 
