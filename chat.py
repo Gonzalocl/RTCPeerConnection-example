@@ -137,7 +137,7 @@ def get_new_chat_id():
 
 
 def get_random_chat_id():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=chat_id_length))
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=chat_id_length))
 
 
 def db_store_chat(chat):
