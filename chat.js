@@ -109,6 +109,7 @@ function waitingUpdate() {
     waitingText.innerText = "Refreshing in " + --waitingSeconds + " seconds.";
 
     if (waitingSeconds === 0) {
+        waiting = false;
         refresh();
         return;
     }
