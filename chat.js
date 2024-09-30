@@ -130,11 +130,19 @@ function refresh() {
     showConnectingSection();
     refreshButton.disabled = true;
 
-    setTimeout(refreshFailed, 3000);
+    signalingGetAnswer(chatId)
+        .then(a => getAnswerDone(a));
 }
 
-function refreshSucceed() {
-    showChatSection();
+function getAnswerDone(a) {
+    if (a) {
+        refreshSucceed(a);
+    }
+    refreshFailed();
+}
+
+function refreshSucceed(a) {
+    rtcSetAnswer(a);
 }
 
 function refreshFailed() {
