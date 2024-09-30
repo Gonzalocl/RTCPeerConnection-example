@@ -126,6 +126,7 @@ function connectingUpdate() {
 }
 
 function refresh() {
+    showConnectingSection();
     refreshButton.disabled = true;
 
     setTimeout(refreshFailed, 3000);
@@ -136,10 +137,9 @@ function refreshSucceed() {
 }
 
 function refreshFailed() {
+    connecting = false;
     refreshButton.disabled = false;
-    waiting = true;
-    waitingSeconds = waitingInterval;
-    waitingUpdate();
+    showWaitingSection();
 }
 
 function main() {
