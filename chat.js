@@ -55,6 +55,16 @@ function showChatSection() {
 }
 
 function createChatClick() {
+    showConnectingSection();
+
+    rtcGetOffer()
+        .then(o => signalingPostOffer(o))
+        .then(c => postOfferDone(c));
+}
+
+function postOfferDone(c) {
+    connecting = false;
+    chatId = c;
     joinLink = window.location.href + "?chatId=" + chatId;
     joinLinkText.value = joinLink;
 
