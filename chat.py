@@ -125,7 +125,6 @@ def get_answer(chat_id):
     if not chat:
         return '404 Not Found', [], {}
 
-    db_delete_chat(chat_id)
     return '200 OK', [], {'answer': chat[3]}
 
 
