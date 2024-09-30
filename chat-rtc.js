@@ -12,14 +12,24 @@ function onIceCandidate(e) {
 
 function onDataChannelOpen() {
     console.log("onDataChannelOpen");
+    onDataChannelReady();
 }
 
 function onDataChannelMessage(e) {
     console.log("onDataChannelMessage: " + e.data);
+    onDataMessageReceived(e.data);
 }
 
 function rtcSendMessage(message) {
     dataChannel.send(message);
+}
+
+function rtcSetOnDataMessageReceived(f) {
+    onDataMessageReceived = f;
+}
+
+function rtcSetOnDataChannelReady(f) {
+    onDataChannelReady = f;
 }
 
 let candidates = [];
@@ -28,6 +38,8 @@ let dataChannel;
 let offer;
 let answer;
 let {'promise': iceDonePromise, 'resolve': iceDoneResolver} = Promise.withResolvers();
+let onDataChannelReady;
+let onDataMessageReceived;
 
 let pc = new RTCPeerConnection();
 pc.onicecandidate = onIceCandidate;
