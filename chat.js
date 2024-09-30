@@ -106,21 +106,25 @@ function sendMessageClick() {
         return;
     }
 
+    addMessageBubbleMe(messageInput.value);
+}
+
+function addMessageBubble(msg, className) {
     let messageDiv = document.createElement("div");
-    messageDiv.className = "message me";
-    messageDiv.innerText = messageInput.value;
+    messageDiv.className = className;
+    messageDiv.innerText = msg;
 
     chatHistory.prepend(messageDiv);
+}
+
+function addMessageBubbleMe(msg) {
+    addMessageBubble(msg, "message me");
     chatHistory.scrollTop = 0;
     messageInput.value = "";
 }
 
-function messageReceived(message) {
-    let messageDiv = document.createElement("div");
-    messageDiv.className = "message other";
-    messageDiv.innerText = message;
-
-    chatHistory.prepend(messageDiv);
+function addMessageBubbleOther(msg) {
+    addMessageBubble(msg, "message other");
 }
 
 function messageKeyDown(e) {
