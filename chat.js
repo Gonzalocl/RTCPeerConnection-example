@@ -2,6 +2,7 @@ let chatId;
 let joinLink;
 
 let joinSection;
+let joinInput;
 let waitingSection;
 let joinLinkText;
 let refreshButton;
@@ -62,6 +63,23 @@ function createChatClick() {
 
 function joinChatClick() {
     showConnectingSection();
+
+    const linkPrefix = window.location.href + "?chatId=";
+    let joinInputValue = joinInput.value;
+
+    if (joinInputValue.startsWith(linkPrefix)) {
+        chatId = joinInputValue.substr(linkPrefix.length);
+    } else {
+        chatId = joinInputValue;
+    }
+
+    joinChat();
+}
+
+function joinChat() {
+    signalingGetOffer(chatId)
+        .then(o => rtcGetAnswer(o))
+        .then(a => signalingPutAnswer(chatId, a));
 }
 
 function refreshClick() {
@@ -154,6 +172,7 @@ function refreshFailed() {
 function main() {
     chatId = new URLSearchParams(window.location.search).get("chatId");
     joinSection = document.getElementById("join-section");
+    joinInput = document.getElementById("join-input");
     waitingSection = document.getElementById("waiting-section");
     joinLinkText = document.getElementById("join-link");
     refreshButton = document.getElementById("refresh-button");
@@ -169,6 +188,7 @@ function main() {
 
     if (chatId) {
         showConnectingSection();
+        joinChat();
     } else {
         showJoinSection()
     }
