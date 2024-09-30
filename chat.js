@@ -189,6 +189,7 @@ function onMessageReceived(msg) {
 }
 
 function onChatReady() {
+    waiting = false;
     connecting = false;
     showChatSection();
 }
