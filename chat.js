@@ -106,6 +106,7 @@ function sendMessageClick() {
         return;
     }
 
+    rtcSendMessage(messageInput.value);
     addMessageBubbleMe(messageInput.value);
 }
 
@@ -183,6 +184,15 @@ function refreshFailed() {
     showWaitingSection();
 }
 
+function onMessageReceived(msg) {
+    addMessageBubbleOther(msg);
+}
+
+function onChatReady() {
+    connecting = false;
+    showChatSection();
+}
+
 function main() {
     chatId = new URLSearchParams(window.location.search).get("chatId");
     joinSection = document.getElementById("join-section");
@@ -199,6 +209,9 @@ function main() {
     connectingText = document.getElementById("connecting-text");
 
     window.history.pushState("", "", "/");
+
+    rtcSetOnDataChannelReady(onChatReady);
+    rtcSetOnDataMessageReceived(onMessageReceived);
 
     if (chatId) {
         showConnectingSection();
