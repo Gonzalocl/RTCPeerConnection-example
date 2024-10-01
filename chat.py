@@ -21,16 +21,23 @@ import mysql.connector
 new_chat_id_max_attempts = 10
 chat_id_length = 64
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="user",
-    password="password",
-    database="database"
-)
-db_cursor = db.cursor()
+
+def db_connect():
+    database = mysql.connector.connect(
+        host="localhost",
+        user="user",
+        password="password",
+        database="database"
+    )
+    return database, database.cursor()
+
+
+db, db_cursor = db_connect()
 
 
 def chat_signaling_request(method, path_request, body_request):
+    db_initialize()
+
     if not path_request.startswith('/chat-signaling'):
         status = '404 Not Found'
         headers = []
@@ -192,3 +199,11 @@ def db_delete_chat(chat_id):
 
 def db_is_chat_id_present(chat_id):
     return True if db_get_chat(chat_id) else False
+
+
+def db_initialize():
+    global db, db_cursor
+    if not db.is_connected():
+        db_cursor.close()
+        db.close()
+        db, db_cursor = db_connect()
