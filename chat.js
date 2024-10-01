@@ -5,7 +5,6 @@ let joinSection;
 let joinInput;
 let waitingSection;
 let joinLinkText;
-let refreshButton;
 let connectingSection;
 let chatSection;
 let chatHistory;
@@ -161,7 +160,6 @@ function connectingUpdate() {
 
 function refresh() {
     showConnectingSection();
-    refreshButton.disabled = true;
 
     signalingGetAnswer(chatId)
         .then(a => getAnswerDone(a));
@@ -180,7 +178,6 @@ function refreshSucceed(a) {
 
 function refreshFailed() {
     connecting = false;
-    refreshButton.disabled = false;
     showWaitingSection();
 }
 
@@ -200,7 +197,6 @@ function main() {
     joinInput = document.getElementById("join-input");
     waitingSection = document.getElementById("waiting-section");
     joinLinkText = document.getElementById("join-link");
-    refreshButton = document.getElementById("refresh-button");
     connectingSection = document.getElementById("connecting-section");
     chatSection = document.getElementById("chat-section");
     chatHistory = document.getElementById("chat-history");
