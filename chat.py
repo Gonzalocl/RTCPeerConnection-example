@@ -49,12 +49,7 @@ def chat_signaling_request(method, path_request, body_request):
         if body_request:
             body = json.loads(body_request)
 
-        try:
-            status, headers, response = chat_request(method, path, body)
-        except:
-            status = '500 Internal Server Error'
-            headers = []
-            response = {}
+        status, headers, response = chat_request(method, path, body)
 
     response_encoded = json.dumps(response).encode('utf8')
 
@@ -140,7 +135,13 @@ def application(env, start_response):
     path = env.get('PATH_INFO')
     body = read_body(env)
 
-    status, headers, response = chat_signaling_request(method, path, body)
+    try:
+        status, headers, response = chat_signaling_request(method, path, body)
+    except Exception as e:
+        print(e)
+        status = '500 Internal Server Error'
+        headers = []
+        response = ''
 
     start_response(status, headers)
     return response
