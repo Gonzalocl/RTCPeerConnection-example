@@ -41,7 +41,7 @@ let {'promise': iceDonePromise, 'resolve': iceDoneResolver} = Promise.withResolv
 let onDataChannelReady;
 let onDataMessageReceived;
 
-let pc = new RTCPeerConnection();
+let pc = new RTCPeerConnection({iceServers: [{urls: ["stun:stun.l.google.com:19302"]}], iceTransportPolicy: "all"});
 pc.onicecandidate = onIceCandidate;
 
 // step 1 on peer A
